@@ -1,0 +1,101 @@
+package setting
+
+import (
+	"log"
+	"time"
+
+	"github.com/go-ini/ini"
+)
+
+// 应用相关
+type App struct {
+	JwtSecret string		// Jwt秘钥
+	HmacSecret string		// Hmac秘钥
+	PageSize  int			// 分页大小
+	PrefixUrl string		// url的前缀
+
+	RuntimeRootPath string	// 运行时根目录
+
+	// 图片相关
+	ImageSavePath  string
+	ImageMaxSize   int
+	ImageAllowExts []string
+
+	// 文件保存路径
+	ExportSavePath string
+	QrCodeSavePath string
+	FontSavePath   string
+
+	// 日志相关
+	LogRootPath string
+	LogSavePath string
+	LogSaveName string
+	LogFileExt  string
+	TimeFormat  string
+}
+// 服务器相关
+type Server struct {
+	RunMode      string
+	HttpPort     int
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+}
+// 数据库连接
+type Database struct {
+	Type        string
+	User        string
+	Password    string
+	Host        string
+	Name        string
+	TablePrefix string
+}
+// redis连接
+type Redis struct {
+	Host        string
+	Password    string
+	MaxIdle     int
+	MaxActive   int
+	IdleTimeout time.Duration
+}
+
+type BaiduApi struct {
+	BaseUrl		string
+	Ak          string
+}
+
+// 全局 配置变量
+var AppSetting = &App{}
+var ServerSetting = &Server{}
+var DatabaseSetting = &Database{}
+var RedisSetting = &Redis{}
+var BaiduApiSetting = &BaiduApi{}
+
+var cfg *ini.File
+
+// Setup initialize the configuration instance
+func Setup() {
+	var err error
+	cfg, err = ini.Load("conf/app.ini")
+	if err != nil {
+		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
+	}
+
+	mapTo("app", AppSetting)
+	mapTo("server", ServerSetting)
+	mapTo("database", DatabaseSetting)
+	mapTo("redis", RedisSetting)
+	mapTo("baidu_api", BaiduApiSetting)
+
+	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
+	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
+	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
+	RedisSetting.IdleTimeout = RedisSetting.IdleTimeout * time.Second
+}
+
+// mapTo map section
+func mapTo(section string, v interface{}) {
+	err := cfg.Section(section).MapTo(v)
+	if err != nil {
+		log.Fatalf("Cfg.MapTo %s err: %v", section, err)
+	}
+}
