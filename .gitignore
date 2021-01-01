@@ -5,6 +5,7 @@ vendor/
 
 traffic_jam_direction
 
+var/
 runtime/*
 !runtime/qrcode/bg.jpg
 !runtime/fonts

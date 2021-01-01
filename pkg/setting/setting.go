@@ -73,9 +73,12 @@ var BaiduApiSetting = &BaiduApi{}
 var cfg *ini.File
 
 // Setup initialize the configuration instance
-func Setup() {
+func Setup(path string) {
 	var err error
-	cfg, err = ini.Load("conf/app.ini")
+	if path == "" {
+		path = "conf/app.ini"
+	}
+	cfg, err = ini.Load(path)
 	if err != nil {
 		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,7 +17,7 @@ import (
 )
 
 func init() {
-	setting.Setup()
+	setting.Setup(*flag.String("f","conf/app.ini", "config file path"))
 	models.Setup()
 	logging.Setup()
 	_ = gredis.Setup()
