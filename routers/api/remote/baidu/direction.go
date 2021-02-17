@@ -1,6 +1,7 @@
 package baidu
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -8,9 +9,18 @@ import (
 	"traffic_jam_direction/pkg/e"
 )
 
+type point struct {
+	Latitude float32 `json:"latitude" valid:"Required"`
+	Longitude float32 `json:"longitude" valid:"Required"`
+}
+
+func (p *point) String() string{
+	return fmt.Sprint(p.Latitude,",",p.Longitude)
+}
+
 type directionLiteJSON struct {
-	Origin		string `json:"origin" valid:"Required"`
-	Destination string `json:"destination" valid:"Required"`
+	Start		point `json:"start" valid:"Required"`
+	End point `json:"end" valid:"Required"`
 	Tactics		int    `json:"tactics" valid:"Range(0,3)"`
 }
 
@@ -21,7 +31,6 @@ func DirectionLite(c *gin.Context) {
 			Tactics: 2,
 		}
 	)
-
 	httpCode, errCode := app.BindAndValid(c, &req)
 	if errCode != e.SUCCESS {
 		appG.Response(httpCode, errCode, nil)
@@ -29,8 +38,8 @@ func DirectionLite(c *gin.Context) {
 	}
 
 	reqMap := map[string]string {
-		"origin": 		req.Origin,
-		"destination": 	req.Destination,
+		"origin": 		req.Start.String(),
+		"destination": 	req.End.String(),
 		"tactics": 		strconv.Itoa(req.Tactics),
 	}
 

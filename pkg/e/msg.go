@@ -23,10 +23,14 @@ var MsgFlags = map[int]string{
 	ERROR_GET_ARTICLES_FAIL:         "获取多个文章失败",
 	ERROR_GET_ARTICLE_FAIL:          "获取单个文章失败",
 	ERROR_GEN_ARTICLE_POSTER_FAIL:   "生成文章海报失败",
-	ERROR_AUTH_CHECK_TOKEN_FAIL:     "Token鉴权失败",
-	ERROR_AUTH_CHECK_TOKEN_TIMEOUT:  "Token已超时",
-	ERROR_AUTH_TOKEN:                "Token生成失败",
-	ERROR_AUTH:                      "Token错误",
+
+	ErrorAuthCheckTokenFail:    "Token鉴权失败",
+	ErrorAuthCheckTokenTimeout: "Token已超时",
+	ErrorAuthToken:             "Token生成失败",
+	ErrorAuth:                  "Token错误",
+	ErrorAuthTokenNotExist:	"Token不存在",
+	ErrorAuthTokenLogout: "用户退出登陆，token失效",
+
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL:    "保存图片失败",
 	ERROR_UPLOAD_CHECK_IMAGE_FAIL:   "检查图片失败",
 	ERROR_UPLOAD_CHECK_IMAGE_FORMAT: "校验图片错误，图片格式或大小有问题",

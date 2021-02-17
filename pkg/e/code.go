@@ -26,11 +26,12 @@ const (
 	ERROR_GET_ARTICLE_FAIL         = 10018
 	ERROR_GEN_ARTICLE_POSTER_FAIL  = 10019
 
-	ERROR_AUTH_CHECK_TOKEN_FAIL    = 20001
-	ERROR_AUTH_CHECK_TOKEN_TIMEOUT = 20002
-	ERROR_AUTH_TOKEN               = 20003
-	ERROR_AUTH                     = 20004
-	ERROR_AUTH_TOKEN_NOT_EXIST	   = 20005
+	ErrorAuthCheckTokenFail    = 20001
+	ErrorAuthCheckTokenTimeout = 20002
+	ErrorAuthToken             = 20003
+	ErrorAuth                  = 20004
+	ErrorAuthTokenNotExist     = 20005
+	ErrorAuthTokenLogout       = 20006
 
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL    = 30001
 	ERROR_UPLOAD_CHECK_IMAGE_FAIL   = 30002

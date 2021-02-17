@@ -25,7 +25,7 @@ func GenerateToken(username string, login bool) (string, error) {
 	claims := Claims{
 		EncodeMD5(username),
 		EncodeMD5(nowTime.String()),
-		false,
+		login,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "xxrl",

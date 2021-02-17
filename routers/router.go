@@ -9,7 +9,6 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	_ "traffic_jam_direction/docs"
 
-	"traffic_jam_direction/middleware/jwt"
 	"traffic_jam_direction/pkg/export"
 	"traffic_jam_direction/pkg/qrcode"
 	"traffic_jam_direction/pkg/upload"
@@ -18,7 +17,6 @@ import (
 	"traffic_jam_direction/routers/api/v1"
 )
 
-// 生成路由
 // InitRouter initialize routing information
 func InitRouter() *gin.Engine {
 	r := gin.New()
@@ -31,11 +29,14 @@ func InitRouter() *gin.Engine {
 
 	r.POST("/token", api.Token)
 	r.POST("/login", api.Login)
+	r.POST("/logout", api.Logout)
+	// TODO: 注册
+	//r.POST("/registration",)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.POST("/upload", api.UploadImage)
 
 	apiV1 := r.Group("/api/v1")
-	apiV1.Use(jwt.JWT())
+	//apiV1.Use(jwt.JWT())
 	{
 		//获取标签列表
 		apiV1.GET("/tags", v1.GetTags)
@@ -62,6 +63,10 @@ func InitRouter() *gin.Engine {
 		apiV1.DELETE("/articles/:id", v1.DeleteArticle)
 		//生成文章海报
 		apiV1.POST("/articles/poster/generate", v1.GenerateArticlePoster)
+
+		apiV1.POST("/user_info/:id", api.UserInfo)
+
+		apiV1.POST("/directionlite", baidu.DirectionLite)
 	}
 
 	apiBaidu := r.Group("/api/baidu")

@@ -4,6 +4,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"
+	"traffic_jam_direction/pkg/app"
+	"traffic_jam_direction/pkg/gredis"
 	"traffic_jam_direction/pkg/util"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +13,7 @@ import (
 	"traffic_jam_direction/pkg/e"
 )
 
-type Token struct {
+type TokenType struct {
 	Token string `json:"token"`
 }
 
@@ -21,38 +23,37 @@ func JWT() gin.HandlerFunc {
 	// 检查 token 和是否过期
 	return func(c *gin.Context) {
 		code := e.SUCCESS
-		//var data interface{}
 
-		//token := c.Query("token")
-		var Token Token
-		if err := c.ShouldBindWith(&Token, binding.JSON); err != nil {
-			code = e.ERROR_AUTH_TOKEN_NOT_EXIST
-		} else {
-			token := Token.Token
-			if token == "" {
-				code = e.ERROR_AUTH_TOKEN_NOT_EXIST
-			} else {
-				cli, err := util.ParseToken(token)
-				if err != nil {
-					switch err.(*jwt.ValidationError).Errors {
-					case jwt.ValidationErrorExpired:
-						code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
-					default:
-						code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
-					}
-				} else {
-					// 设置用户登录状态
-					c.Set("login", cli.Login)
-				}
+		appG := app.Gin{C: c}
+		var token TokenType
+
+		for ;; {
+			if err := c.ShouldBindWith(&token, binding.JSON); err != nil || token.Token == "" {
+				code = e.ErrorAuthTokenNotExist
+				break
 			}
+			// 用户已经退出登录
+			if gredis.Exists("token"+token.Token) {
+				code = e.ErrorAuthTokenLogout
+				break
+			}
+			cli, err := util.ParseToken(token.Token)
+			if err != nil {
+				switch err.(*jwt.ValidationError).Errors {
+				case jwt.ValidationErrorExpired:
+					code = e.ErrorAuthCheckTokenTimeout
+				default:
+					code = e.ErrorAuthCheckTokenFail
+				}
+				break
+			}
+
+			// 设置用户登录状态
+			c.Set("login", cli.Login)
 		}
 
 		if code != e.SUCCESS {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code": code,
-				"msg":  e.GetMsg(code),
-				"data": "",
-			})
+			appG.Response(http.StatusUnauthorized, code, nil)
 			c.Abort()
 		} else {
 			c.Next()

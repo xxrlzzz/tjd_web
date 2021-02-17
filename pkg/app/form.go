@@ -14,14 +14,12 @@ func BindAndValid(c *gin.Context, form interface{}) (int, int) {
 	//err := c.Bind(form)
 	err := c.ShouldBindWith(form,binding.JSON)
 	if err != nil {
-		//println(err)
 		logging.Info("bind request failed with %#v", err)
 		return http.StatusBadRequest, e.INVALID_PARAMS
 	}
 	valid := validation.Validation{}
 	check, err := valid.Valid(form)
 	if err != nil {
-		//println(err)
 		logging.Info("validate request failed with %#v", err)
 		return http.StatusInternalServerError, e.ERROR
 	}
@@ -29,7 +27,5 @@ func BindAndValid(c *gin.Context, form interface{}) (int, int) {
 		MarkErrors(valid.Errors)
 		return http.StatusBadRequest, e.INVALID_PARAMS
 	}
-	//println("here")
-	//logging.Info("here")
 	return http.StatusOK, e.SUCCESS
 }

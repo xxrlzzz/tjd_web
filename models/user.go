@@ -23,14 +23,13 @@ type User struct {
 }
 
 // CheckAuth checks if authentication information exists
-func CheckLogin(username, password string) (bool, error) {
+func CheckLogin(username, password string) (bool, int,  error) {
 	var auth User
 	err := db.Select("id").Where(User{Username: username, Password: password}).First(&auth).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return false, err
+		return false, 0, err
 	}
-
-	return auth.ID > 0, nil
+	return auth.ID > 0, auth.ID,  nil
 }
 
 // ExistUserByPhone check user exist by phone
@@ -55,6 +54,16 @@ func AddUser(username , password, phone, email string) error {
 		return err
 	}
 	return nil
+}
+
+func GetUser(id int) (*User, error) {
+	var user User
+	err := db.Where("id = ? AND deleted_on = ? ", id, 0).First(&user).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 func GetUsers(pageNum ,pageSize int, maps interface{}) ([]User, error) {
