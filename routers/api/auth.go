@@ -21,13 +21,18 @@ import (
 // so password is not required.
 type auth struct {
 	Username string `valid:"Required; MaxSize(50)" json:"username"`
-	Password string ` json:"password"`
+	Password string `json:"password"`
 }
 
 // user logout  request definition
 type logout struct {
+	UserId int    `valid:"Required; Min(1)" json:"id"`
+	Token  string `valid:"Required" json:"token"`
+}
+
+type registration struct {
 	Username string `valid:"Required; MaxSize(50)" json:"username"`
-	Token string `valid:"Required"`
+	Password string `valid:"Required; MaxSize(50)" json:"password"`
 }
 
 // @Summary User Login
@@ -39,7 +44,7 @@ type logout struct {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /login [post]
-func Login(c *gin.Context)  {
+func Login(c *gin.Context) {
 	getAuth(c, true)
 }
 
@@ -57,47 +62,46 @@ func Token(c *gin.Context) {
 
 // getAuth generate token ， and check password if login is true
 func getAuth(c *gin.Context, login bool) {
-	appG := app.Gin{C: c}
-	valid := validation.Validation{}
-	var a auth
-	res := make(map[string]string)
-	// 1. 获取参数
-	if err:= c.ShouldBindWith(&a, binding.JSON); err != nil {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
-		return
-	}
-	// 2. 参数校验
-	if ok,_ := valid.Valid(&a); !ok {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
-		return
-	}
-	if login {
-		var uid int
+	var (
+		appG = app.Gin{C: c}
+		res = make(map[string]interface{})
+		a auth
+		httpCode, errCode int
+	)
 
-		// 3. 登录校验
-		isExist, uid,  err := auth_service.Check(a.Username, a.Password)
+	for {
+		httpCode, errCode = app.BindAndValid(c, &a)
+		if errCode != e.SUCCESS {
+			break
+		}
+
+		if login {
+			var uid int
+
+			// 3. 登录校验
+			isExist, uid, err := auth_service.Check(a.Username, a.Password)
+			if err != nil {
+				httpCode, errCode = http.StatusInternalServerError, e.ErrorAuthCheckTokenFail
+				break
+			}
+			if !isExist {
+				httpCode, errCode = http.StatusUnauthorized, e.ErrorAuth
+				break
+			}
+			res["id"] = strconv.Itoa(uid)
+			res["username"] = a.Username
+		}
+		// 4. 生成token
+		token, err := util.GenerateToken(a.Username, login)
 		if err != nil {
-			appG.Response(http.StatusInternalServerError, e.ErrorAuthCheckTokenFail, nil)
-			return
+			httpCode, errCode = http.StatusInternalServerError, e.ErrorAuthToken
+			break
 		}
-		if !isExist {
-			appG.Response(http.StatusUnauthorized, e.ErrorAuth, nil)
-			return
-		}
-		res["id"] = strconv.Itoa(uid)
-		res["username"] = a.Username
+		res["token"] = token
+		break
+	}
 
-	}
-	// 4. 生成token
-	token, err := util.GenerateToken(a.Username, login)
-	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ErrorAuthToken, nil)
-		return
-	}
-	res["token"] = token
-	appG.Response(http.StatusOK, e.SUCCESS, res)
+	appG.Response(httpCode, errCode, res)
 }
 
 // @Summary user logout and invalid token
@@ -110,7 +114,7 @@ func getAuth(c *gin.Context, login bool) {
 // @Failure 500 {object} app.Response
 // @Router /logout [post]
 func Logout(c *gin.Context) {
-	appG := app.Gin{C:c }
+	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 
 	var l logout
@@ -118,7 +122,7 @@ func Logout(c *gin.Context) {
 	resCode := http.StatusOK
 	errCode := e.SUCCESS
 
-	for ;; {
+	for ; ; {
 		if err := c.ShouldBindWith(&l, binding.JSON); err != nil {
 			app.MarkErrors(valid.Errors)
 			resCode, errCode = http.StatusBadRequest, e.INVALID_PARAMS
@@ -131,6 +135,7 @@ func Logout(c *gin.Context) {
 		}
 
 		_ = gredis.Set("token"+l.Token, true, -1)
+		break
 	}
 	appG.Response(resCode, errCode, res)
 }
@@ -142,9 +147,9 @@ func Logout(c *gin.Context) {
 // @Param id path int true "ID"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /api/v1/articles/{id} [post]
+// @Router /api/v1/UserInfo/{id} [post]
 func UserInfo(c *gin.Context) {
-	appG := app.Gin{C:c }
+	appG := app.Gin{C: c}
 
 	id := com.StrTo(c.Param("id")).MustInt()
 	resCode := http.StatusOK
@@ -156,4 +161,43 @@ func UserInfo(c *gin.Context) {
 		resCode, errCode = http.StatusInternalServerError, e.ERROR
 	}
 	appG.Response(resCode, errCode, user)
+}
+
+// @Summary Registration a new user
+// @Accept json
+// @Tags users
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/Registration [post]
+func Registration(c *gin.Context) {
+	var (
+		appG  = app.Gin{C: c}
+		r       registration
+		res     = make(map[string]interface{})
+		resCode = http.StatusOK
+		errCode = e.SUCCESS
+	)
+
+	for ; ; {
+		resCode, errCode = app.BindAndValid(appG.C, &r)
+		if errCode != e.SUCCESS {
+			break
+		}
+
+		res, success := auth_service.Registration(r.Username, r.Password)
+		if !success {
+			if res["username exist"].(bool) {
+				resCode = http.StatusBadRequest
+				errCode = e.ErrorUserExist
+			} else {
+				resCode = http.StatusInternalServerError
+				errCode = e.ERROR
+			}
+			break
+		}
+		break
+	}
+	appG.Response(resCode, errCode, res)
 }

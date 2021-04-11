@@ -33,27 +33,27 @@ func CheckLogin(username, password string) (bool, int,  error) {
 }
 
 // ExistUserByPhone check user exist by phone
-func ExistUserByPhone(phone string) (bool, error) {
+func ExistUserByKey(key, value string) (bool, error) {
 	var auth User
-	err := db.Select("id").Where("phone = ? AND deleted_on = ?", phone, 0).Find(&auth).Error
+	err := db.Select("id").Where(key+" = ? AND deleted_on = ?", value, 0).Find(&auth).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
 	return auth.ID > 0, nil
 }
 
-func AddUser(username , password, phone, email string) error {
-	user := User{
+func AddUser(username , password, phone, email string) (*User,error) {
+	user := &User{
 		Username: username,
 		Password: password,
 		Phone:    phone,
 		Email:    email,
 		Role:     NormalUser,
 	}
-	if err := db.Create(&user).Error; err != nil {
-		return err
+	if err := db.Create(user).Error; err != nil {
+		return nil, err
 	}
-	return nil
+	return user, nil
 }
 
 func GetUser(id int) (*User, error) {

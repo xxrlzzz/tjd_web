@@ -1,0 +1,25 @@
+syntax = "proto3";
+import "point.proto";
+package proto;
+
+option go_package = "tjd_service/proto/gen";
+// NavigationService 导航服务
+//
+service NavigationService {
+  // 接受导航请求, 返回导航点的流
+  rpc Navigation(NavigationRequest) returns (stream NavigationResponse) ;
+}
+
+// NavigationRequest
+message NavigationRequest {
+  Point start = 1;      // 起点
+  Point end = 2;        // 终点
+  int64 timestamp = 3;  // 出行时间
+}
+
+// NavigationResponse
+message NavigationResponse {
+  Point to = 1;         // 下一点
+  double distance = 2;   // 距离
+  double time = 3;       // 所需时间
+}

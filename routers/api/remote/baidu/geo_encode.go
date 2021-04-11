@@ -18,8 +18,6 @@ func Geocoding(c *gin.Context) {
 		req  geocodingJSON
 	)
 
-	//println("here")
-	//logging.Info("here")
 	httpCode, errCode := app.BindAndValid(c, &req)
 	if errCode != e.SUCCESS {
 		appG.Response(httpCode, errCode, nil)
@@ -28,6 +26,7 @@ func Geocoding(c *gin.Context) {
 
 	reqMap := map[string]string{
 		"address": req.Address,
+		"ret_coordtype": "gcj02ll",
 	}
 	if req.City != "" {
 		reqMap["city"] = req.City
@@ -59,6 +58,8 @@ func ReverseGeocoding(c *gin.Context) {
 	}
 
 	reqMap := map[string]string{
+		//"coordtype":"gcj02ll",
+		"ret_coordtype":"gcj02ll",
 		"location": req.Location,
 	}
 

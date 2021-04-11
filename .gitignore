@@ -1,9 +1,9 @@
 .idea/
 .DS_Store
 
-vendor/
-
 traffic_jam_direction
+
+pkg/grpc/proto/gen/
 
 var/
 runtime/*

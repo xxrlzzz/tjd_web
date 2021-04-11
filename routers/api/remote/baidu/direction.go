@@ -1,68 +1,85 @@
 package baidu
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"traffic_jam_direction/pkg/app"
+	"traffic_jam_direction/pkg/base"
 	"traffic_jam_direction/pkg/e"
 )
 
-type point struct {
-	Latitude float32 `json:"latitude" valid:"Required"`
-	Longitude float32 `json:"longitude" valid:"Required"`
-}
-
-func (p *point) String() string{
-	return fmt.Sprint(p.Latitude,",",p.Longitude)
-}
-
 type directionLiteJSON struct {
-	Start		point `json:"start" valid:"Required"`
-	End point `json:"end" valid:"Required"`
-	Tactics		int    `json:"tactics" valid:"Range(0,3)"`
+	Start   base.Point `json:"start" valid:"Required"`
+	End     base.Point `json:"end" valid:"Required"`
+}
+
+func ReqDirectionLite(start, end base.Point) (int,int, map[string]interface{}){
+	var (
+		data map[string]interface{} = nil
+		httpCode, errCode = http.StatusOK, e.SUCCESS
+	)
+	for {
+
+		reqMap := map[string]string{
+			"origin":      start.String(),
+			"destination": end.String(),
+			"tactics":     "2",
+		}
+
+		resp, err := GetReq(reqMap, UrlMap["DirectionLite"])
+		if err != nil {
+			httpCode, errCode = http.StatusInternalServerError, e.ERROR
+			break
+		}
+		data = resp.(map[string]interface{})
+		break
+	}
+	return httpCode, errCode, data
 }
 
 func DirectionLite(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
-		req	 = directionLiteJSON{
-			Tactics: 2,
-		}
+		req  = directionLiteJSON{}
+		data map[string]interface{} = nil
 	)
 	httpCode, errCode := app.BindAndValid(c, &req)
-	if errCode != e.SUCCESS {
-		appG.Response(httpCode, errCode, nil)
-		return
+	if errCode == e.SUCCESS {
+		httpCode, errCode, data = ReqDirectionLite(req.Start, req.End)
 	}
-
-	reqMap := map[string]string {
-		"origin": 		req.Start.String(),
-		"destination": 	req.End.String(),
-		"tactics": 		strconv.Itoa(req.Tactics),
-	}
-
-	resp, err := GetReq(reqMap, UrlMap["DirectionLite"])
-	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
-		return
-	}
-
-	appG.Response(http.StatusOK, e.SUCCESS, resp)
+	//for {
+	//	if errCode != e.SUCCESS {
+	//		break
+	//	}
+	//
+	//	reqMap := map[string]string{
+	//		"origin":      req.Start.String(),
+	//		"destination": req.End.String(),
+	//		"tactics":     strconv.Itoa(req.Tactics),
+	//	}
+	//
+	//	resp, err := GetReq(reqMap, UrlMap["DirectionLite"])
+	//	if err != nil {
+	//		httpCode, errCode = http.StatusInternalServerError, e.ERROR
+	//		break
+	//	}
+	//	data = resp
+	//	break
+	//}
+	appG.Response(httpCode, errCode, data)
 }
 
-
 type directionJSON struct {
-	Origin		string `json:"origin" valid:"Required"`
+	Origin      string `json:"origin" valid:"Required"`
 	Destination string `json:"destination" valid:"Required"`
-	Tactics		int    `json:"tactics" valid:"Range(0,11)"`
+	Tactics     int    `json:"tactics" valid:"Range(0,11)"`
 }
 
 func Direction(c *gin.Context) {
 	var (
-		appG = app.Gin{C:c}
-		req = directionJSON{
+		appG = app.Gin{C: c}
+		req  = directionJSON{
 			Tactics: 5,
 		}
 	)
@@ -77,10 +94,10 @@ func Direction(c *gin.Context) {
 		return
 	}
 
-	reqMap := map[string]string {
-		"origin":		req.Origin,
-		"destination":	req.Destination,
-		"tactics":		strconv.Itoa(req.Tactics),
+	reqMap := map[string]string{
+		"origin":      req.Origin,
+		"destination": req.Destination,
+		"tactics":     strconv.Itoa(req.Tactics),
 	}
 
 	resp, err := GetReq(reqMap, UrlMap["Direction"])

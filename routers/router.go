@@ -1,12 +1,10 @@
 package routers
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
-
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"net/http"
 	_ "traffic_jam_direction/docs"
 
 	"traffic_jam_direction/pkg/export"
@@ -30,8 +28,8 @@ func InitRouter() *gin.Engine {
 	r.POST("/token", api.Token)
 	r.POST("/login", api.Login)
 	r.POST("/logout", api.Logout)
-	// TODO: 注册
-	//r.POST("/registration",)
+	r.POST("/registration", api.Registration)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.POST("/upload", api.UploadImage)
 
@@ -66,14 +64,16 @@ func InitRouter() *gin.Engine {
 
 		apiV1.POST("/user_info/:id", api.UserInfo)
 
-		apiV1.POST("/directionlite", baidu.DirectionLite)
+		apiV1.POST("/direction", v1.Direction)
+
+		apiV1.POST("/query_traffic", v1.QueryTraffic)
 	}
 
 	apiBaidu := r.Group("/api/baidu")
 	//apiBaidu.Use(jwt.JWT())
 	{
 		apiBaidu.GET("/geocoding", baidu.Geocoding)
-		apiBaidu.GET("/reverse_geocoding", baidu.ReverseGeocoding)
+		apiBaidu.POST("/reverse_geocoding", baidu.ReverseGeocoding)
 		apiBaidu.GET("/direction", baidu.Direction)
 		apiBaidu.GET("/directionlite", baidu.DirectionLite)
 		apiBaidu.GET("/traffic/around", baidu.TrafficAround)

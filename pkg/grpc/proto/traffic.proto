@@ -1,0 +1,50 @@
+syntax = "proto3";
+import "point.proto";
+
+package proto;
+
+option go_package = "tjd_service/proto/gen";
+
+service TrafficService {
+  rpc ReceivePoints(stream PointRequest) returns (ReceiveResponse) ;
+  rpc ReceiveLines(stream LineRequest) returns (ReceiveResponse) ;
+  rpc ReceiveMode(ModeRequest) returns (ReceiveResponse);
+  rpc QueryTraffic(TrafficRequest) returns (TrafficResponse);
+}
+
+message ReceiveResponse {
+  string message = 1;
+  int32 status = 2;
+}
+
+message TrafficResponse {
+  int32 status = 1;
+  repeated double SpeedHot = 2;
+  repeated double SpeedNormal = 3;
+  repeated double SpeedExtreme = 4;
+}
+
+message ModeRequest {
+  int32 mode = 1;
+}
+
+message TrafficRequest {
+  double longitude = 1;
+  double latitude = 2;
+}
+
+message PointRequest {
+  Point start = 1;
+  Request request = 2;
+}
+
+message LineRequest {
+  Point start = 1;
+  Point end = 2;
+  Request request = 3;
+}
+
+message Request {
+  double speed = 1;
+  double orientation = 2;
+}

@@ -10,17 +10,38 @@ import (
 )
 
 // BindAndValid binds and validates data
-func BindAndValid(c *gin.Context, form interface{}) (int, int) {
-	//err := c.Bind(form)
-	err := c.ShouldBindWith(form,binding.JSON)
+func BindAndValid(c *gin.Context, json interface{}) (int, int) {
+	err := c.ShouldBindWith(json,binding.JSON)
 	if err != nil {
-		logging.Info("bind request failed with %#v", err)
+		logging.Info("bind request failed with ", err.Error())
 		return http.StatusBadRequest, e.INVALID_PARAMS
 	}
 	valid := validation.Validation{}
-	check, err := valid.Valid(form)
+	check, err := valid.Valid(json)
 	if err != nil {
-		logging.Info("validate request failed with %#v", err)
+		logging.Info("validate request failed with ", err.Error())
+		return http.StatusInternalServerError, e.ERROR
+	}
+	if !check {
+		MarkErrors(valid.Errors)
+		return http.StatusBadRequest, e.INVALID_PARAMS
+	}
+	return http.StatusOK, e.SUCCESS
+}
+
+// bind form
+// not using
+func BindAndValidForm(c *gin.Context, query interface{}) (int, int) {
+	err := c.Bind(query)
+
+	if err != nil {
+		logging.Info("bind request failed with ", err.Error())
+		return http.StatusBadRequest, e.INVALID_PARAMS
+	}
+	valid := validation.Validation{}
+	check, err := valid.Valid(query)
+	if err != nil {
+		logging.Info("validate request failed with ", err.Error())
 		return http.StatusInternalServerError, e.ERROR
 	}
 	if !check {

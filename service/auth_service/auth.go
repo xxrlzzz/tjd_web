@@ -21,3 +21,18 @@ func UserInfo(id int) (map[string]interface{}, error) {
 		"id": user.ID,
 	}, nil
 }
+
+func Registration(username , password string) (map[string]interface{}, bool) {
+	if exist, err := models.ExistUserByKey("username", password); exist == true || err != nil  {
+		return map[string]interface{}{"username exist": true},false
+	}
+	user, err := models.AddUser(username, password, "","")
+	if err != nil {
+		return map[string]interface{}{"username exist": false},false
+	}
+	return map[string]interface{}{
+		"username": user.Username,
+		"password": user.Password,
+		"id": user.ID,
+	},true
+}

@@ -8,9 +8,13 @@ import (
 	"traffic_jam_direction/pkg/e"
 )
 
+/**
+ *  @note : not using those apis
+ */
+
 type TrafficRoadJSON struct {
 	RoadName string `json:"road_name" valid:"Required;MaxSize(26)"`
-	City	 string `json:"city" valid:"Required;MaxSize(26)"`
+	City     string `json:"city" valid:"Required;MaxSize(26)"`
 }
 
 func TrafficRoad(c *gin.Context) {
@@ -26,8 +30,8 @@ func TrafficRoad(c *gin.Context) {
 	}
 
 	reqMap := map[string]string{
-		"road_name"	: req.RoadName,
-		"city"		: req.City,
+		"road_name": req.RoadName,
+		"city":      req.City,
 	}
 
 	resp, err := GetReq(reqMap, UrlMap["TrafficRoad"])
@@ -41,7 +45,7 @@ func TrafficRoad(c *gin.Context) {
 
 type TrafficAroundJSON struct {
 	Center string `json:"center" valid:"Required"`
-	Radius int	  `json:"radius" valid:"Range(1,1000)"`
+	Radius int    `json:"radius" valid:"Range(1,1000)"`
 }
 
 func TrafficAround(c *gin.Context) {
@@ -57,8 +61,8 @@ func TrafficAround(c *gin.Context) {
 	}
 
 	reqMap := map[string]string{
-		"road_name"	: req.Center,
-		"city"		: strconv.Itoa(req.Radius),
+		"road_name": req.Center,
+		"city":      strconv.Itoa(req.Radius),
 	}
 
 	resp, err := GetReq(reqMap, UrlMap["TrafficAround"])

@@ -8,7 +8,7 @@ import (
 )
 
 // 应用相关
-type App struct {
+type app struct {
 	JwtSecret string		// Jwt秘钥
 	HmacSecret string		// Hmac秘钥
 	PageSize  int			// 分页大小
@@ -34,14 +34,14 @@ type App struct {
 	TimeFormat  string
 }
 // 服务器相关
-type Server struct {
+type server struct {
 	RunMode      string
 	HttpPort     int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 }
 // 数据库连接
-type Database struct {
+type database struct {
 	Type        string
 	User        string
 	Password    string
@@ -50,7 +50,7 @@ type Database struct {
 	TablePrefix string
 }
 // redis连接
-type Redis struct {
+type redis struct {
 	Host        string
 	Password    string
 	MaxIdle     int
@@ -58,17 +58,24 @@ type Redis struct {
 	IdleTimeout time.Duration
 }
 
-type BaiduApi struct {
+type baiduApi struct {
 	BaseUrl		string
 	Ak          string
 }
 
+type grpc struct {
+	Host string
+	TrafficPort string
+	NavigationPort string
+}
+
 // 全局 配置变量
-var AppSetting = &App{}
-var ServerSetting = &Server{}
-var DatabaseSetting = &Database{}
-var RedisSetting = &Redis{}
-var BaiduApiSetting = &BaiduApi{}
+var AppSetting = &app{}
+var ServerSetting = &server{}
+var DatabaseSetting = &database{}
+var RedisSetting = &redis{}
+var BaiduApiSetting = &baiduApi{}
+var GrpcSetting = &grpc{}
 
 var cfg *ini.File
 
@@ -88,6 +95,7 @@ func Setup(path string) {
 	mapTo("database", DatabaseSetting)
 	mapTo("redis", RedisSetting)
 	mapTo("baidu_api", BaiduApiSetting)
+	mapTo("grpc", GrpcSetting)
 
 	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
