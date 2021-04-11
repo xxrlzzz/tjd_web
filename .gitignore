@@ -3,7 +3,7 @@
 
 traffic_jam_direction
 
-pkg/grpc/proto/gen/
+#pkg/grpc/proto/gen/
 
 var/
 runtime/*
