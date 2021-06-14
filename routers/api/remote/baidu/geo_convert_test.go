@@ -21,5 +21,3 @@ func TestConvertBaiduCoordinate(t *testing.T) {
 	assert.Equal(t, res[0], "116.410244,39.921505")
 	assert.Equal(t, res[1], "124.2,21.0")
 }
-
-

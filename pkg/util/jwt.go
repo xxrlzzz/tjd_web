@@ -11,8 +11,8 @@ var jwtSecret []byte
 // 用户名,获取token的时间, 是否登录
 type Claims struct {
 	Username string `json:"username"`
-	Time string `json:"time"`
-	Login bool `json:"login"`
+	Time     string `json:"time"`
+	Login    bool   `json:"login"`
 	jwt.StandardClaims
 }
 

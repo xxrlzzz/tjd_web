@@ -11,7 +11,7 @@ import (
 
 // BindAndValid binds and validates data
 func BindAndValid(c *gin.Context, json interface{}) (int, int) {
-	err := c.ShouldBindWith(json,binding.JSON)
+	err := c.ShouldBindWith(json, binding.JSON)
 	if err != nil {
 		logging.Info("bind request failed with ", err.Error())
 		return http.StatusBadRequest, e.INVALID_PARAMS

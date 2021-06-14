@@ -65,7 +65,6 @@ func Open(name string, flag int, perm os.FileMode) (*os.File, error) {
 	return f, nil
 }
 
-
 // MustOpen maximize trying to open the file
 func MustOpen(fileName, filePath string, absolute bool) (*os.File, error) {
 	var src string

@@ -1,0 +1,43 @@
+[ req ]
+default_bits = 2048
+distinguished_name = server_distinguished_name
+req_extensions = req_ext
+x509_extensions = x509_ext
+
+
+[ server_distinguished_name ]
+countryName = Country Name (2 letter code)
+countryName_default = CN
+stateOrProvinceName = State or Province Name (full name)
+stateOrProvinceName_default = Beijing 
+localityName = Locality Name (eg, city)
+localityName_default = Beijing
+organizationName = Organization Name (eg, company)
+organizationName_default = xxrl
+commonName = Common Name (e.g. server FQDN or YOUR name)
+commonName_default = xxrl.net
+emailAddress = Email Address
+emailAddress_default = test@example.com
+
+
+[ x509_ext ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+nsComment = "OpenSSL Generated Certificate"
+
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = xxrl.net
+DNS.2 = localhost
+DNS.3 = 127.0.0.1
+# IPv4 localhost
+IP.1 = 127.0.0.1
+# IPv6 localhost
+IP.2 = ::1
+IP.3 = 192.168.2.163

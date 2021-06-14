@@ -20,7 +20,7 @@ import (
 // auth login or get token
 // so password is not required.
 type auth struct {
-	Username string `valid:"Required; MaxSize(50)" json:"username"`
+	Username string `valid:"Required; MaxSize(65)" json:"username"`
 	Password string `json:"password"`
 }
 
@@ -32,7 +32,7 @@ type logout struct {
 
 type registration struct {
 	Username string `valid:"Required; MaxSize(50)" json:"username"`
-	Password string `valid:"Required; MaxSize(50)" json:"password"`
+	Password string `valid:"Required; MaxSize(65)" json:"password"`
 }
 
 // @Summary User Login
@@ -63,9 +63,9 @@ func Token(c *gin.Context) {
 // getAuth generate token ， and check password if login is true
 func getAuth(c *gin.Context, login bool) {
 	var (
-		appG = app.Gin{C: c}
-		res = make(map[string]interface{})
-		a auth
+		appG              = app.Gin{C: c}
+		res               = make(map[string]interface{})
+		a                 auth
 		httpCode, errCode int
 	)
 
@@ -122,7 +122,7 @@ func Logout(c *gin.Context) {
 	resCode := http.StatusOK
 	errCode := e.SUCCESS
 
-	for ; ; {
+	for {
 		if err := c.ShouldBindWith(&l, binding.JSON); err != nil {
 			app.MarkErrors(valid.Errors)
 			resCode, errCode = http.StatusBadRequest, e.INVALID_PARAMS
@@ -167,20 +167,19 @@ func UserInfo(c *gin.Context) {
 // @Accept json
 // @Tags users
 // @Produce  json
-// @Param id path int true "ID"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /api/v1/Registration [post]
+// @Router /registration [post]
 func Registration(c *gin.Context) {
 	var (
-		appG  = app.Gin{C: c}
+		appG    = app.Gin{C: c}
 		r       registration
 		res     = make(map[string]interface{})
 		resCode = http.StatusOK
 		errCode = e.SUCCESS
 	)
 
-	for ; ; {
+	for {
 		resCode, errCode = app.BindAndValid(appG.C, &r)
 		if errCode != e.SUCCESS {
 			break

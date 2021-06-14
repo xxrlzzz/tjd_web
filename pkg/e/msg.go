@@ -27,11 +27,11 @@ var MsgFlags = map[int]string{
 	ErrorAuthCheckTokenFail:    "Token鉴权失败",
 	ErrorAuthCheckTokenTimeout: "Token已超时",
 	ErrorAuthToken:             "Token生成失败",
-	ErrorAuth:                  "Token错误",
+	ErrorAuth:                  "登陆失败,用户名或密码错误",
 	ErrorAuthTokenNotExist:     "Token不存在",
 	ErrorAuthTokenLogout:       "用户退出登陆，token失效",
 
-	ErrorUserExist: 			"用户已经存在",
+	ErrorUserExist: "用户已经存在",
 
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL:    "保存图片失败",
 	ERROR_UPLOAD_CHECK_IMAGE_FAIL:   "检查图片失败",

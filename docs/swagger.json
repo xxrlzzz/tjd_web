@@ -1,125 +1,21 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "An example of gin",
-        "title": "Golang Gin API",
-        "termsOfService": "https://github.com/EDDYCJY/go-gin-example",
-        "contact": {},
-        "license": {
-            "name": "MIT",
-            "url": "https://github.com/EDDYCJY/go-gin-example/blob/master/LICENSE"
-        },
-        "version": "1.0"
+        "contact": {}
     },
     "paths": {
-        "/api/v1/articles": {
+        "/api/baidu/direction": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get multiple articles",
-                "parameters": [
-                    {
-                        "description": "TagID",
-                        "name": "tag_id",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "State",
-                        "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "CreatedBy",
-                        "name": "created_by",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
+                "tags": [
+                    "baidu"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/app.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.Response"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Add article",
-                "parameters": [
-                    {
-                        "description": "TagID",
-                        "name": "tag_id",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Title",
-                        "name": "title",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Desc",
-                        "name": "desc",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Content",
-                        "name": "content",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "CreatedBy",
-                        "name": "created_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "State",
-                        "name": "state",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
+                "summary": "direction request",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -136,21 +32,18 @@
                 }
             }
         },
-        "/api/v1/articles/{id}": {
+        "/api/baidu/directionlite": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a single article",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
+                "tags": [
+                    "baidu"
                 ],
+                "summary": "direction request lite version",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -165,70 +58,20 @@
                         }
                     }
                 }
-            },
-            "put": {
+            }
+        },
+        "/api/baidu/geocoding": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update article",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "TagID",
-                        "name": "tag_id",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Title",
-                        "name": "title",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Desc",
-                        "name": "desc",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Content",
-                        "name": "content",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "ModifiedBy",
-                        "name": "modified_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "State",
-                        "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
+                "tags": [
+                    "baidu"
                 ],
+                "summary": "Get geocoding by location",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -243,12 +86,104 @@
                         }
                     }
                 }
-            },
-            "delete": {
+            }
+        },
+        "/api/baidu/reverse_geocoding": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete article",
+                "tags": [
+                    "baidu"
+                ],
+                "summary": "Get reverse geocoding by location",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/baidu/traffic/around": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "baidu"
+                ],
+                "summary": "get traffic info around a circle",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/baidu/traffic/road": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "baidu"
+                ],
+                "summary": "get traffic info on a road",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/UserInfo/{id}": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "get UserInfo by id",
                 "parameters": [
                     {
                         "type": "integer",
@@ -274,73 +209,18 @@
                 }
             }
         },
-        "/api/v1/tags": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get multiple article tags",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Name",
-                        "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "State",
-                        "name": "state",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/app.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.Response"
-                        }
-                    }
-                }
-            },
+        "/api/v1/direction": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Add article tag",
-                "parameters": [
-                    {
-                        "description": "Name",
-                        "name": "name",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "State",
-                        "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "CreatedBy",
-                        "name": "created_by",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
+                "tags": [
+                    "traffic"
                 ],
+                "summary": "Get navigation from start to end",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -357,30 +237,18 @@
                 }
             }
         },
-        "/api/v1/tags/export": {
+        "/api/v1/query_traffic": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Export article tag",
-                "parameters": [
-                    {
-                        "description": "Name",
-                        "name": "name",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "State",
-                        "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
+                "tags": [
+                    "traffic"
                 ],
+                "summary": "Query traffic condition by given address",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -428,73 +296,29 @@
                 }
             }
         },
-        "/api/v1/tags/{id}": {
-            "put": {
+        "/login": {
+            "post": {
                 "produces": [
+                    "application/json",
                     "application/json"
                 ],
-                "summary": "Update article tag",
+                "tags": [
+                    "users"
+                ],
+                "summary": "User Login",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
+                        "in": "query",
                         "required": true
                     },
                     {
-                        "description": "Name",
-                        "name": "name",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "State",
-                        "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "ModifiedBy",
-                        "name": "modified_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/app.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.Response"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete article tag",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
+                        "type": "string",
+                        "description": "password",
+                        "name": "password",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -514,24 +338,133 @@
                 }
             }
         },
-        "/auth": {
-            "get": {
+        "/logout": {
+            "post": {
                 "produces": [
+                    "application/json",
                     "application/json"
                 ],
-                "summary": "Get Auth",
+                "tags": [
+                    "users"
+                ],
+                "summary": "user logout and invalid token",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "userName",
+                        "description": "username",
                         "name": "username",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "password",
-                        "name": "password",
+                        "description": "token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/oauth/redirect": {
+            "post": {
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "oauth2 callback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "login",
+                        "name": "username",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/registration": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Registration a new user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get Token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
                         "in": "query",
                         "required": true
                     }
@@ -565,6 +498,9 @@
                 },
                 "msg": {
                     "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         }

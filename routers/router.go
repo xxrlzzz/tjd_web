@@ -33,9 +33,14 @@ func InitRouter() *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.POST("/upload", api.UploadImage)
 
+	r.GET("/oauth/redirect", v1.OauthCallback)
+	r.GET("/oauth/login_success", v1.OauthSuccess)
+
 	apiV1 := r.Group("/api/v1")
 	//apiV1.Use(jwt.JWT())
 	{
+		//apiV1.GET("/remote_user_info", v1.RemoteUserInfo)
+
 		apiV1.POST("/user_info/:id", api.UserInfo)
 
 		apiV1.POST("/direction", v1.Direction)

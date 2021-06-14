@@ -27,13 +27,13 @@ func JWT() gin.HandlerFunc {
 		appG := app.Gin{C: c}
 		var token TokenType
 
-		for ;; {
+		for {
 			if err := c.ShouldBindWith(&token, binding.JSON); err != nil || token.Token == "" {
 				code = e.ErrorAuthTokenNotExist
 				break
 			}
 			// 用户已经退出登录
-			if gredis.Exists("token"+token.Token) {
+			if gredis.Exists("token" + token.Token) {
 				code = e.ErrorAuthTokenLogout
 				break
 			}

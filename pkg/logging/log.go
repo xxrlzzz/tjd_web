@@ -31,11 +31,11 @@ const (
 )
 
 // Setup initialize the log instance
-func Setup() {
+func Setup(isDev bool) {
 	var err error
 	filePath := getLogFilePath()
 	fileName := getLogFileName()
-	F, err = file.MustOpen(fileName, filePath, true)
+	F, err = file.MustOpen(fileName, filePath, !isDev)
 	if err != nil {
 		log.Fatalf("logging.Setup err: %v", err)
 	}
@@ -49,7 +49,7 @@ func Debug(v ...interface{}) {
 		return
 	}
 	setPrefix(DEBUG)
-	logger.Println(v)
+	logger.Println(v...)
 }
 
 // Info output logs at info level
@@ -58,7 +58,7 @@ func Info(v ...interface{}) {
 		return
 	}
 	setPrefix(INFO)
-	logger.Println(v)
+	logger.Println(v...)
 }
 
 // Warn output logs at warn level
@@ -67,7 +67,7 @@ func Warn(v ...interface{}) {
 		return
 	}
 	setPrefix(WARNING)
-	logger.Println(v)
+	logger.Println(v...)
 }
 
 // Error output logs at error level
@@ -76,7 +76,7 @@ func Error(v ...interface{}) {
 		return
 	}
 	setPrefix(ERROR)
-	logger.Println(v)
+	logger.Println(v...)
 }
 
 // Fatal output logs at fatal level
@@ -85,7 +85,7 @@ func Fatal(v ...interface{}) {
 		return
 	}
 	setPrefix(FATAL)
-	logger.Fatalln(v)
+	logger.Fatalln(v...)
 }
 
 // DebugF output logs at debug level
@@ -96,13 +96,14 @@ func DebugF(fmt string, v ...interface{}) {
 	setPrefix(DEBUG)
 	logger.Printf(fmt, v...)
 }
+
 // InfoF output logs at info level
 func InfoF(fmt string, v ...interface{}) {
 	if logger == nil {
 		return
 	}
 	setPrefix(INFO)
-	logger.Printf(fmt,v...)
+	logger.Printf(fmt, v...)
 }
 
 // WarnF output logs at warn level
@@ -115,7 +116,7 @@ func WarnF(fmt string, v ...interface{}) {
 }
 
 // Error output logs at error level
-func ErrorF(fmt string,v ...interface{}) {
+func ErrorF(fmt string, v ...interface{}) {
 	if logger == nil {
 		return
 	}

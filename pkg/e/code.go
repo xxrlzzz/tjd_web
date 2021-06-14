@@ -33,7 +33,7 @@ const (
 	ErrorAuthTokenNotExist     = 20005
 	ErrorAuthTokenLogout       = 20006
 
-	ErrorUserExist 			  = 20101
+	ErrorUserExist = 20101
 
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL    = 30001
 	ERROR_UPLOAD_CHECK_IMAGE_FAIL   = 30002

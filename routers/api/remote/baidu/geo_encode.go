@@ -12,6 +12,13 @@ type geocodingJSON struct {
 	City    string `json:"city" valid:"MaxSize(32)"`
 }
 
+// @Summary Get geocoding by location
+// @Accept json
+// @Tags baidu
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/baidu/geocoding [get]
 func Geocoding(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
@@ -25,7 +32,7 @@ func Geocoding(c *gin.Context) {
 	}
 
 	reqMap := map[string]string{
-		"address": req.Address,
+		"address":       req.Address,
 		"ret_coordtype": "gcj02ll",
 	}
 	if req.City != "" {
@@ -45,6 +52,13 @@ type revGeoCodingJSON struct {
 	Location string `json:"location" valid:"Required"`
 }
 
+// @Summary Get reverse geocoding by location
+// @Accept json
+// @Tags baidu
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/baidu/reverse_geocoding [POST]
 func ReverseGeocoding(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
@@ -59,8 +73,8 @@ func ReverseGeocoding(c *gin.Context) {
 
 	reqMap := map[string]string{
 		//"coordtype":"gcj02ll",
-		"ret_coordtype":"gcj02ll",
-		"location": req.Location,
+		"ret_coordtype": "gcj02ll",
+		"location":      req.Location,
 	}
 
 	resp, err := GetReq(reqMap, UrlMap["ReverseGeocoding"])

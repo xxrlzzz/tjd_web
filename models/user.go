@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	NormalUser = 1
-	AdminUser = 3
+	NormalUser  = 1
+	AdminUser   = 3
 	ManagerUser = 2
 )
 
@@ -16,20 +16,20 @@ type User struct {
 	ID       int    `gorm:"primary_key" json:"id"`
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Phone 	 string `json:"phone"`
+	Phone    string `json:"phone"`
 	Email    string `json:"email"`
 	LoginOn  string `json:"loginOn"`
 	Role     int    `json:"role"`
 }
 
 // CheckAuth checks if authentication information exists
-func CheckLogin(username, password string) (bool, int,  error) {
+func CheckLogin(username, password string) (bool, int, error) {
 	var auth User
 	err := db.Select("id").Where(User{Username: username, Password: password}).First(&auth).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, 0, err
 	}
-	return auth.ID > 0, auth.ID,  nil
+	return auth.ID > 0, auth.ID, nil
 }
 
 // ExistUserByPhone check user exist by phone
@@ -42,7 +42,7 @@ func ExistUserByKey(key, value string) (bool, error) {
 	return auth.ID > 0, nil
 }
 
-func AddUser(username , password, phone, email string) (*User,error) {
+func AddUser(username, password, phone, email string) (*User, error) {
 	user := &User{
 		Username: username,
 		Password: password,
@@ -66,10 +66,10 @@ func GetUser(id int) (*User, error) {
 	return &user, nil
 }
 
-func GetUsers(pageNum ,pageSize int, maps interface{}) ([]User, error) {
+func GetUsers(pageNum, pageSize int, maps interface{}) ([]User, error) {
 	var (
 		users []User = nil
-		err error = nil
+		err   error  = nil
 	)
 
 	if pageSize > 0 && pageNum > 0 {
@@ -100,7 +100,6 @@ func DeleteUser(id int) error {
 	//}
 	//return nil
 }
-
 
 func UpdateLogin(id int) error {
 	now := time.Now().Unix()

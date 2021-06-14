@@ -11,15 +11,23 @@ import (
 	"traffic_jam_direction/routers/api/remote/baidu"
 )
 
+// navigation request definition
 type directionLite struct {
-	Start   base.Point `json:"start" valid:"Required"`
-	End     base.Point `json:"end" valid:"Required"`
+	Start base.Point `json:"start" valid:"Required"`
+	End   base.Point `json:"end" valid:"Required"`
 }
 
+// @Summary Get navigation from start to end
+// @Accept json
+// @Tags traffic
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/direction [post]
 func Direction(c *gin.Context) {
 	var (
-		appG = app.Gin{C: c}
-		req  = directionLite{}
+		appG                        = app.Gin{C: c}
+		req                         = directionLite{}
 		data map[string]interface{} = nil
 	)
 	httpCode, errCode := app.BindAndValid(c, &req)
@@ -40,11 +48,17 @@ func Direction(c *gin.Context) {
 			httpCode, errCode = http.StatusInternalServerError, e.ERROR
 			break
 		}
+		err = client.Destroy()
+		if err != nil {
+			logging.WarnF("NavigationClient Destroy failed with %#v", err)
+			break
+		}
 		break
 	}
-	if errCode != e.SUCCESS {
-		// request baidu api for guarantee
-		httpCode, errCode, data = baidu.ReqDirectionLite(req.Start, req.End)
-	}
+	httpCode, errCode, data = baidu.ReqDirectionLite(req.Start, req.End)
+	//if errCode != e.SUCCESS || true{
+	//	// request baidu api for guarantee
+	//	httpCode, errCode, data = baidu.ReqDirectionLite(req.Start, req.End)
+	//}
 	appG.Response(httpCode, errCode, data)
 }

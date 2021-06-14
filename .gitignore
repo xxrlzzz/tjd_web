@@ -5,6 +5,7 @@ traffic_jam_direction
 
 #pkg/grpc/proto/gen/
 
+build/
 var/
 runtime/*
 !runtime/qrcode/bg.jpg

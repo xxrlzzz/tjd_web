@@ -10,14 +10,14 @@ import (
 )
 
 type directionLiteJSON struct {
-	Start   base.Point `json:"start" valid:"Required"`
-	End     base.Point `json:"end" valid:"Required"`
+	Start base.Point `json:"start" valid:"Required"`
+	End   base.Point `json:"end" valid:"Required"`
 }
 
-func ReqDirectionLite(start, end base.Point) (int,int, map[string]interface{}){
+func ReqDirectionLite(start, end base.Point) (int, int, map[string]interface{}) {
 	var (
-		data map[string]interface{} = nil
-		httpCode, errCode = http.StatusOK, e.SUCCESS
+		data              map[string]interface{} = nil
+		httpCode, errCode                        = http.StatusOK, e.SUCCESS
 	)
 	for {
 
@@ -25,6 +25,8 @@ func ReqDirectionLite(start, end base.Point) (int,int, map[string]interface{}){
 			"origin":      start.String(),
 			"destination": end.String(),
 			"tactics":     "2",
+			"coord_type": "gcj02",
+			"ret_coordtype": "gcj02",
 		}
 
 		resp, err := GetReq(reqMap, UrlMap["DirectionLite"])
@@ -38,10 +40,17 @@ func ReqDirectionLite(start, end base.Point) (int,int, map[string]interface{}){
 	return httpCode, errCode, data
 }
 
+// @Summary direction request lite version
+// @Accept json
+// @Tags baidu
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/baidu/directionlite [get]
 func DirectionLite(c *gin.Context) {
 	var (
-		appG = app.Gin{C: c}
-		req  = directionLiteJSON{}
+		appG                        = app.Gin{C: c}
+		req                         = directionLiteJSON{}
 		data map[string]interface{} = nil
 	)
 	httpCode, errCode := app.BindAndValid(c, &req)
@@ -76,6 +85,13 @@ type directionJSON struct {
 	Tactics     int    `json:"tactics" valid:"Range(0,11)"`
 }
 
+// @Summary direction request
+// @Accept json
+// @Tags baidu
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/baidu/direction [get]
 func Direction(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
@@ -98,6 +114,8 @@ func Direction(c *gin.Context) {
 		"origin":      req.Origin,
 		"destination": req.Destination,
 		"tactics":     strconv.Itoa(req.Tactics),
+		"coord_type": "gcj02",
+		"ret_coordtype": "gcj02",
 	}
 
 	resp, err := GetReq(reqMap, UrlMap["Direction"])

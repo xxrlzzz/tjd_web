@@ -17,6 +17,13 @@ type TrafficRoadJSON struct {
 	City     string `json:"city" valid:"Required;MaxSize(26)"`
 }
 
+// @Summary get traffic info on a road
+// @Accept json
+// @Tags baidu
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/baidu/traffic/road [get]
 func TrafficRoad(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
@@ -48,6 +55,13 @@ type TrafficAroundJSON struct {
 	Radius int    `json:"radius" valid:"Range(1,1000)"`
 }
 
+// @Summary get traffic info around a circle
+// @Accept json
+// @Tags baidu
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/baidu/traffic/around [get]
 func TrafficAround(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}

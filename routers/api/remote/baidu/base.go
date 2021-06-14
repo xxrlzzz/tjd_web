@@ -12,19 +12,19 @@ import (
 )
 
 type statusResult struct {
-	Status int `json:"status"`
-	Message string `json:"message"`
-	Result interface{} `json:"result"`
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Result  interface{} `json:"result"`
 }
 
 // GetReq 拼接请求的方法和参数 向百度发出get请求
-// @Param param 请求的参数
-// @Param method 请求的方法
-// @Return map[string]interface{} 解析出的json object
-// @Return error 失败时 返回 , 成功返回 nil
+// Param param 请求的参数
+// Param method 请求的方法
+// Return map[string]interface{} 解析出的json object
+// Return error 失败时 返回 , 成功返回 nil
 func GetReq(param map[string]string, method string) (interface{}, error) {
 	// 1. 拼接url
-	reqUrl := fmt.Sprintf("%s/%s",setting.BaiduApiSetting.BaseUrl,method)
+	reqUrl := fmt.Sprintf("%s/%s", setting.BaiduApiSetting.BaseUrl, method)
 	Url, err := url.Parse(reqUrl)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func GetReq(param map[string]string, method string) (interface{}, error) {
 	// 2. 加入参数
 	params := url.Values{}
 	for key, val := range param {
-		params.Set(key,val)
+		params.Set(key, val)
 	}
 	params.Set("ak", setting.BaiduApiSetting.Ak)
 	params.Set("output", "json")
@@ -43,7 +43,7 @@ func GetReq(param map[string]string, method string) (interface{}, error) {
 	// baidu method is [get]
 	resp, err := http.Get(Url.String())
 	if err != nil {
-		logging.WarnF("error to get %v with err %#v",Url.Path, err.Error())
+		logging.WarnF("error to get %v with err %#v", Url.Path, err.Error())
 		return nil, err
 	}
 	// 4. 获取响应

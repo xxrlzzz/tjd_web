@@ -9,12 +9,13 @@ import (
 
 // 应用相关
 type app struct {
-	JwtSecret string		// Jwt秘钥
-	HmacSecret string		// Hmac秘钥
-	PageSize  int			// 分页大小
-	PrefixUrl string		// url的前缀
+	Env        string // 环境
+	JwtSecret  string // Jwt秘钥
+	HmacSecret string // Hmac秘钥
+	PageSize   int    // 分页大小
+	PrefixUrl  string // url的前缀
 
-	RuntimeRootPath string	// 运行时根目录
+	RuntimeRootPath string // 运行时根目录
 
 	// 图片相关
 	ImageSavePath  string
@@ -33,6 +34,11 @@ type app struct {
 	LogFileExt  string
 	TimeFormat  string
 }
+
+func (a *app) IsDev() bool {
+	return a.Env == "dev"
+}
+
 // 服务器相关
 type server struct {
 	RunMode      string
@@ -40,6 +46,7 @@ type server struct {
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 }
+
 // 数据库连接
 type database struct {
 	Type        string
@@ -49,6 +56,7 @@ type database struct {
 	Name        string
 	TablePrefix string
 }
+
 // redis连接
 type redis struct {
 	Host        string
@@ -59,13 +67,13 @@ type redis struct {
 }
 
 type baiduApi struct {
-	BaseUrl		string
-	Ak          string
+	BaseUrl string
+	Ak      string
 }
 
 type grpc struct {
-	Host string
-	TrafficPort string
+	Host           string
+	TrafficPort    string
 	NavigationPort string
 }
 

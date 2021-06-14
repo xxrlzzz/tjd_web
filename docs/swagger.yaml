@@ -7,35 +7,16 @@ definitions:
         type: object
       msg:
         type: string
+      success:
+        type: boolean
     type: object
 info:
   contact: {}
-  description: An example of gin
-  license:
-    name: MIT
-    url: https://github.com/EDDYCJY/go-gin-example/blob/master/LICENSE
-  termsOfService: https://github.com/EDDYCJY/go-gin-example
-  title: Golang Gin API
-  version: "1.0"
 paths:
-  /api/v1/articles:
+  /api/baidu/direction:
     get:
-      parameters:
-      - description: TagID
-        in: body
-        name: tag_id
-        schema:
-          type: integer
-      - description: State
-        in: body
-        name: state
-        schema:
-          type: integer
-      - description: CreatedBy
-        in: body
-        name: created_by
-        schema:
-          type: integer
+      consumes:
+      - application/json
       produces:
       - application/json
       responses:
@@ -47,84 +28,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Get multiple articles
-    post:
-      parameters:
-      - description: TagID
-        in: body
-        name: tag_id
-        required: true
-        schema:
-          type: integer
-      - description: Title
-        in: body
-        name: title
-        required: true
-        schema:
-          type: string
-      - description: Desc
-        in: body
-        name: desc
-        required: true
-        schema:
-          type: string
-      - description: Content
-        in: body
-        name: content
-        required: true
-        schema:
-          type: string
-      - description: CreatedBy
-        in: body
-        name: created_by
-        required: true
-        schema:
-          type: string
-      - description: State
-        in: body
-        name: state
-        required: true
-        schema:
-          type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/app.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.Response'
-      summary: Add article
-  /api/v1/articles/{id}:
-    delete:
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/app.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.Response'
-      summary: Delete article
+      summary: direction request
+      tags:
+      - baidu
+  /api/baidu/directionlite:
     get:
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
+      consumes:
+      - application/json
       produces:
       - application/json
       responses:
@@ -136,68 +46,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Get a single article
-    put:
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: TagID
-        in: body
-        name: tag_id
-        schema:
-          type: string
-      - description: Title
-        in: body
-        name: title
-        schema:
-          type: string
-      - description: Desc
-        in: body
-        name: desc
-        schema:
-          type: string
-      - description: Content
-        in: body
-        name: content
-        schema:
-          type: string
-      - description: ModifiedBy
-        in: body
-        name: modified_by
-        required: true
-        schema:
-          type: string
-      - description: State
-        in: body
-        name: state
-        schema:
-          type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/app.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.Response'
-      summary: Update article
-  /api/v1/tags:
+      summary: direction request lite version
+      tags:
+      - baidu
+  /api/baidu/geocoding:
     get:
-      parameters:
-      - description: Name
-        in: query
-        name: name
-        type: string
-      - description: State
-        in: query
-        name: state
-        type: integer
+      consumes:
+      - application/json
       produces:
       - application/json
       responses:
@@ -209,25 +64,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Get multiple article tags
+      summary: Get geocoding by location
+      tags:
+      - baidu
+  /api/baidu/reverse_geocoding:
     post:
-      parameters:
-      - description: Name
-        in: body
-        name: name
-        required: true
-        schema:
-          type: string
-      - description: State
-        in: body
-        name: state
-        schema:
-          type: integer
-      - description: CreatedBy
-        in: body
-        name: created_by
-        schema:
-          type: integer
+      consumes:
+      - application/json
       produces:
       - application/json
       responses:
@@ -239,9 +82,49 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Add article tag
-  /api/v1/tags/{id}:
-    delete:
+      summary: Get reverse geocoding by location
+      tags:
+      - baidu
+  /api/baidu/traffic/around:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: get traffic info around a circle
+      tags:
+      - baidu
+  /api/baidu/traffic/road:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: get traffic info on a road
+      tags:
+      - baidu
+  /api/v1/UserInfo/{id}:
+    post:
+      consumes:
+      - application/json
       parameters:
       - description: ID
         in: path
@@ -259,56 +142,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Delete article tag
-    put:
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Name
-        in: body
-        name: name
-        required: true
-        schema:
-          type: string
-      - description: State
-        in: body
-        name: state
-        schema:
-          type: integer
-      - description: ModifiedBy
-        in: body
-        name: modified_by
-        required: true
-        schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/app.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.Response'
-      summary: Update article tag
-  /api/v1/tags/export:
+      summary: get UserInfo by id
+      tags:
+      - users
+  /api/v1/direction:
     post:
-      parameters:
-      - description: Name
-        in: body
-        name: name
-        schema:
-          type: string
-      - description: State
-        in: body
-        name: state
-        schema:
-          type: integer
+      consumes:
+      - application/json
       produces:
       - application/json
       responses:
@@ -320,7 +160,27 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Export article tag
+      summary: Get navigation from start to end
+      tags:
+      - traffic
+  /api/v1/query_traffic:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: Query traffic condition by given address
+      tags:
+      - traffic
   /api/v1/tags/import:
     post:
       parameters:
@@ -341,10 +201,10 @@ paths:
           schema:
             $ref: '#/definitions/app.Response'
       summary: Import Image
-  /auth:
-    get:
+  /login:
+    post:
       parameters:
-      - description: userName
+      - description: username
         in: query
         name: username
         required: true
@@ -356,6 +216,7 @@ paths:
         type: string
       produces:
       - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -365,5 +226,104 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Get Auth
+      summary: User Login
+      tags:
+      - users
+  /logout:
+    post:
+      parameters:
+      - description: username
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: user logout and invalid token
+      tags:
+      - users
+  /oauth/redirect:
+    post:
+      parameters:
+      - description: login
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: oauth2 callback
+      tags:
+      - users
+  /registration:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: Registration a new user
+      tags:
+      - users
+  /token:
+    post:
+      parameters:
+      - description: username
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: Get Token
+      tags:
+      - users
 swagger: "2.0"

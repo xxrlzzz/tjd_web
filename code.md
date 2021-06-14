@@ -6,7 +6,13 @@
 /service： service层  
 /models： model层  
 
-
+```
+// 生成证书
+openssl req -x509 -out localhost.crt -keyout localhost.key \
+  -newkey rsa:2048 -nodes -sha256 \
+  -subj '/CN=121.5.156.132' -extensions EXT -config <( \
+   printf "[dn]\nCN=121.5.156.132\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:tjd_service\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+   ```
 
 
 

@@ -12,19 +12,19 @@ type Gin struct {
 }
 
 type Response struct {
-	Success bool     `json:"success"`
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data"`
+	Success bool        `json:"success"`
+	Code    int         `json:"code"`
+	Msg     string      `json:"msg"`
+	Data    interface{} `json:"data"`
 }
 
 // Response setting gin.JSON
 func (g *Gin) Response(httpCode, errCode int, data interface{}) {
-	g.C.JSON(httpCode, Response{
+	g.C.JSON(http.StatusOK, Response{
 		Success: httpCode == http.StatusOK,
-		Code: errCode,
-		Msg:  e.GetMsg(errCode),
-		Data: data,
+		Code:    httpCode,
+		Msg:     e.GetMsg(errCode),
+		Data:    data,
 	})
 	return
 }

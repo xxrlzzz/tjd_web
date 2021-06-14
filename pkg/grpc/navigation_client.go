@@ -41,14 +41,8 @@ func toStep(paths []string) []map[string]interface{} {
 
 func (client *NavigationClient) Init() error {
 	var err error
-	if credential == nil {
-		credential, err = credentials.NewClientTLSFromFile("conf/client.crt", setting.GrpcSetting.Host)
-	}
-	if err != nil {
-		return err
-	}
 
-	client.Conn, err = grpc.Dial(setting.GrpcSetting.NavigationPort, grpc.WithTransportCredentials(credential))
+	client.Conn, err = grpc.Dial(setting.GrpcSetting.Host+setting.GrpcSetting.NavigationPort, grpc.WithTransportCredentials(credential))
 	if err != nil {
 		return err
 	}
@@ -65,7 +59,7 @@ func (client *NavigationClient) Navigation(start, end base.Point) (result map[st
 	// necessary or not?
 	result, err = nil, nil
 
-	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(5*time.Second))
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(15*time.Second))
 	defer cancel()
 
 	stream, err := client.Client.Navigation(ctx, &pb.NavigationRequest{Start: toPoint(start), End: toPoint(end)})
