@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
-	"traffic_jam_direction/pkg/grpc"
 
 	"github.com/gin-gonic/gin"
 
 	"traffic_jam_direction/models"
 	"traffic_jam_direction/pkg/gredis"
+	"traffic_jam_direction/pkg/grpc"
 	"traffic_jam_direction/pkg/logging"
 	"traffic_jam_direction/pkg/setting"
 	"traffic_jam_direction/pkg/util"
@@ -18,21 +19,34 @@ import (
 
 func init() {
 	setting.Setup(*flag.String("f", "conf/app.ini", "config file path"))
-	models.Setup()
-	logging.Setup(setting.AppSetting.IsDev())
-	err := gredis.Setup()
-	if err != nil {
-		logging.WarnF("fail to setup redis with error %#v", err)
+
+	if setting.AppSetting.EnableBasicServer() {
+		logging.Setup(setting.AppSetting.IsDev())
+		util.Setup()
+	} else {
+		log.Fatalln("Disabled basic server")
+		return
 	}
-	err = grpc.SetUp()
-	if err != nil {
-		logging.WarnF("fail to setup grpc with error %#v", err)
+	if setting.AppSetting.EnableDatabase() {
+		models.Setup()
+		err := gredis.Setup()
+		if err != nil {
+			logging.WarnF("fail to setup redis with error %#v", err)
+		}
 	}
-	util.Setup()
+	if setting.AppSetting.EnableGrpc() {
+		err := grpc.SetUp()
+		if err != nil {
+			logging.WarnF("fail to setup grpc with error %#v", err)
+		}
+	}
+
 }
 
 func main() {
-	defer models.CloseDB()
+	if setting.AppSetting.EnableDatabase() {
+		defer models.CloseDB()
+	}
 	gin.SetMode(setting.ServerSetting.RunMode)
 	gin.DisableConsoleColor()
 

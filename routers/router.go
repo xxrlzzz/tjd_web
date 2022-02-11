@@ -6,7 +6,8 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"net/http"
 	_ "traffic_jam_direction/docs"
-
+	
+	"traffic_jam_direction/middleware/jwt"
 	"traffic_jam_direction/pkg/export"
 	"traffic_jam_direction/pkg/qrcode"
 	"traffic_jam_direction/pkg/upload"
@@ -37,7 +38,7 @@ func InitRouter() *gin.Engine {
 	r.GET("/oauth/login_success", v1.OauthSuccess)
 
 	apiV1 := r.Group("/api/v1")
-	//apiV1.Use(jwt.JWT())
+	apiV1.Use(jwt.JWT())
 	{
 		//apiV1.GET("/remote_user_info", v1.RemoteUserInfo)
 
@@ -49,7 +50,7 @@ func InitRouter() *gin.Engine {
 	}
 
 	apiBaidu := r.Group("/api/baidu")
-	//apiBaidu.Use(jwt.JWT())
+	apiBaidu.Use(jwt.JWT())
 	{
 		apiBaidu.GET("/geocoding", baidu.Geocoding)
 		apiBaidu.POST("/reverse_geocoding", baidu.ReverseGeocoding)

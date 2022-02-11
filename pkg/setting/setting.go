@@ -7,8 +7,16 @@ import (
 	"github.com/go-ini/ini"
 )
 
+const BasicServer = 1
+const DatabaseServer = 2
+const GrpcServer = 4
+
 // 应用相关
 type app struct {
+	// 1 : basic server
+	// 2 : database 
+	// 4 : grpc
+	ServerType int
 	Env        string // 环境
 	JwtSecret  string // Jwt秘钥
 	HmacSecret string // Hmac秘钥
@@ -37,6 +45,18 @@ type app struct {
 
 func (a *app) IsDev() bool {
 	return a.Env == "dev"
+}
+
+func (a *app) EnableBasicServer() bool {
+	return a.ServerType & BasicServer != 0
+}
+
+func (a *app) EnableDatabase() bool {
+	return a.ServerType & DatabaseServer != 0
+}
+
+func (a *app) EnableGrpc() bool {
+	return a.ServerType & GrpcServer != 0
 }
 
 // 服务器相关

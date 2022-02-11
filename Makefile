@@ -3,8 +3,8 @@
 all: buildAndStart
 
 build:
-	@echo "build tjd_web to build/"
-	@go build -v -tags netgo -ldflags '-s -w' -o build/tjd_web
+	@echo "build tjd_web to dist/"
+	@go build -v -tags netgo -ldflags '-s -w' -o dist/tjd_web
 
 start:
 	./build/tjd_web
@@ -12,14 +12,14 @@ start:
 buildAndStart: build start
 
 buildLinux:
-	GOARCH=amd64 GOOS=linux go build -tags netgo -ldflags '-s -w' -o build/tjd_linux_web
+	GOARCH=amd64 GOOS=linux go build -tags netgo -ldflags '-s -w' -o dist/tjd_linux_web
 
 tool:
 	go vet ./...; true
 	gofmt -w .
 
 clean:
-	rm -rf build/ var/
+	rm -rf dist/ var/
 	go clean -i .
 
 help:

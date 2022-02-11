@@ -11,12 +11,12 @@ import (
 	"traffic_jam_direction/pkg/upload"
 )
 
-// @Summary Import Image
+// @Summary Upload Image
 // @Produce  json
 // @Param image formData file true "Image File"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /api/v1/tags/import [post]
+// @Router upload [post]
 func UploadImage(c *gin.Context) {
 	appG := app.Gin{C: c}
 	file, image, err := c.Request.FormFile("image")
